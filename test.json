@@ -1,0 +1,40 @@
+[
+  {
+    "Name": "Lib1",
+    "Entrys":[
+      {
+        "Type": "Film",
+        "Titolo": "Titolo1",
+        "Desc": "Descrizione1",
+        "Size": 11.1,
+        "Format": "mp4"
+      },
+      {
+        "Type": "File Generico",
+        "Titolo": "Titolo2",
+        "Desc": "Descrizione2",
+        "Size": 22.2,
+        "Format": "mp2"
+      }
+    ]
+  },
+  {
+    "Name": "Lib2",
+    "Entrys":[
+      {
+        "Type": "Immagine",
+        "Titolo": "Titolo3",
+        "Desc": "Descrizione3",
+        "Size": 33.3,
+        "Format": "png"
+      },
+      {
+        "Type": "File Generico",
+        "Titolo": "Titolo4",
+        "Desc": "Descrizione4",
+        "Size": 44.4,
+        "Format": "mp3"
+      }
+    ]
+  }
+]
