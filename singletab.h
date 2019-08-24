@@ -33,10 +33,12 @@ signals:
     void removeT();
 private slots:
     void addEntry();
+    void viewEntry();
     void editEntry();
     void removeEntry();
     void editLibrary();
     void research(QString);
+public slots:
     void removeTab(){emit removeT();}
 private:
     QString title;
@@ -46,6 +48,7 @@ private:
     QLabel* resLabel;
     QComboBox* resFilter;
     QAbstractButton* addData;
+    QAbstractButton* viewData;
     QAbstractButton* editData;
     QAbstractButton* removeData;
     QAbstractButton* editLib;

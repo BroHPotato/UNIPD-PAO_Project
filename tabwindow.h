@@ -26,7 +26,10 @@ public slots:
     void removeT();
     void addT();
     void updateT(QString);
+    void resetT();
 signals:
+    void disableSave();
+    void enableSave();
 
 private:
     void addT(QString t);

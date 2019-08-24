@@ -29,7 +29,11 @@ SOURCES += \
     singletab.cpp \
     adddialog.cpp \
     adddialoglib.cpp \
-    mainwindow.cpp
+    mainwindow.cpp \
+    film.cpp \
+    genericfile.cpp \
+    image.cpp \
+    abstractitem.cpp
 
 HEADERS += \
     container.h \

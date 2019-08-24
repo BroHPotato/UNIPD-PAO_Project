@@ -18,6 +18,7 @@ void MainWindow::createMenus()
     connect(openAct, SIGNAL(triggered()),this, SLOT(openFile()));
 
     saveAct = new QAction("Salva", this);
+    saveAct->setEnabled(false);
     fileMenu->addAction(saveAct);
     connect(saveAct, SIGNAL(triggered()),this, SLOT(saveFile()));
 
@@ -32,6 +33,21 @@ void MainWindow::createMenus()
     addAct = new QAction("Aggiungi libreria", this);
     toolMenu->addAction(addAct);
     connect(addAct, SIGNAL(triggered()),TabWidget, SLOT(addT()));
+
+    resetAct = new QAction("Nuova raccolta", this);
+    toolMenu->addAction(resetAct);
+    connect(resetAct, SIGNAL(triggered()),TabWidget, SLOT(resetT()));
+
+    connect(TabWidget, SIGNAL(enableSave()), this, SLOT(enableSave()));
+    connect(TabWidget, SIGNAL(disableSave()), this, SLOT(disableSave()));
+}
+
+void MainWindow::enableSave(){
+    saveAct->setEnabled(true);
+}
+
+void MainWindow::disableSave(){
+    saveAct->setEnabled(false);
 }
 void MainWindow::openFile()
 {

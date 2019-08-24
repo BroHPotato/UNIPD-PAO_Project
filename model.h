@@ -4,7 +4,7 @@
 
 #include <QObject>
 #include <QAbstractListModel>
-#include "stdexcpt.h"
+#include <stdexcept>
 #include "container.h"
 #include "abstractitem.h"
 #include "film.h"
@@ -33,7 +33,6 @@ public:
 private:
     Container<AbstractItem *> library;
     QString title;
-signals:
 };
 Q_DECLARE_METATYPE(AbstractItem *)
 #endif // MODEL_H

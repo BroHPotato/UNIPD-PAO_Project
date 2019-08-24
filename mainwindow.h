@@ -16,7 +16,9 @@ public:
 private slots:
     void openFile();
     void saveFile();
-
+public slots:
+    void enableSave();
+    void disableSave();
 private:
     void createMenus();
 
@@ -27,5 +29,6 @@ private:
     QAction *saveAct;
     QAction *exitAct;
     QAction *addAct;
+    QAction *resetAct;
 };
 #endif // MAINWINDOW_H

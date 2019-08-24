@@ -98,14 +98,8 @@ QVariant Model::dataType(const QModelIndex &index, int role) const
         return QVariant();
 
     if ( role == Qt::DisplayRole && library[index.row()])
-    {
-        if(dynamic_cast<Film*>(library[index.row()]))
-            return "Film";
-        else if(dynamic_cast<Image*>(library[index.row()]))
-            return "Immagine";
-        else if(dynamic_cast<GenericFile*>(library[index.row()]))
-            return "File Generico";
-    }
+        return library[index.row()]->GetType();
+
     return  QVariant();
 }
 

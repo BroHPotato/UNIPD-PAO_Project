@@ -17,10 +17,16 @@ AddDialog::AddDialog(QString t, QWidget* parent): QDialog(parent)
     typeItem->addItem("Immagine");
 
     nameItem=new QLineEdit;
+    nameItem->setPlaceholderText("Titolo");
+
     descItem=new QTextEdit;
+
     sizeItem=new QLineEdit;
-//set validator
+    sizeItem->setPlaceholderText("in KB");
+    sizeItem->setValidator(new QDoubleValidator(0,INFINITY,1000));
+
     formatItem=new QLineEdit;
+    formatItem->setPlaceholderText("es. mp4 o png");
 
     QGridLayout *gLayout = new QGridLayout;
     gLayout->addWidget(nameItemLabel,0,0);

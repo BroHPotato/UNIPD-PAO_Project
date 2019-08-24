@@ -7,6 +7,7 @@ AddDialogLib::AddDialogLib(QString t, QWidget* parent): QDialog(parent)
     cancelButton = new QPushButton("Cancel");
 
     nameLib = new QLineEdit;
+    nameLib->setPlaceholderText("Titolo libreria");
 
     QGridLayout *gLayout = new QGridLayout;
     gLayout->addWidget(nameLabel, 0, 0);

@@ -16,13 +16,14 @@ void TabWindow::addT(){
         tabs.PushBack(new SingleTab(t, this));
         removeTab(indexOf(instructions));
         addTab(tabs[tabs.GetSize()-1],t);
+        emit enableSave();
     }
 }
 void TabWindow::addT(QString t){
     tabs.PushBack(new SingleTab(t, this));
     removeTab(indexOf(instructions));
     addTab(tabs[tabs.GetSize()-1],t);
-
+    emit enableSave();
 }
 void TabWindow::removeT(){
     SingleTab* p =static_cast<SingleTab*>(sender());
@@ -30,8 +31,15 @@ void TabWindow::removeT(){
 
     removeTab(index);
     tabs.Remove(tabs.GetNodo(p));
-    if(tabs.GetSize()==0)
+    if(tabs.GetSize()==0){
+        emit disableSave();
         addTab(instructions, "Istruzioni");
+    }
+}
+void TabWindow::resetT(){
+    for (int i=tabs.GetSize()-1;i>=0;--i) {
+        tabs[i]->removeTab();
+    }
 }
 
 void TabWindow::updateT(QString t){
@@ -48,7 +56,6 @@ void TabWindow::readFromFile(QString fileName)
             file.errorString());
         return;
     }
-    //remove all tabs
     QTextStream file_text(&file);
     QString json_string;
     json_string = file_text.readAll();
@@ -58,15 +65,27 @@ void TabWindow::readFromFile(QString fileName)
     QJsonDocument json_doc=QJsonDocument::fromJson(json_bytes);
 
     QJsonArray json =json_doc.array();
+    try {
+        for(int i=0;i<json.count();++i){
+            QJsonObject lib;
+            lib=json[i].toObject();
+            if (!lib.contains("Entrys") || !lib.contains("Name") )
+                throw (std::invalid_argument("File JSON non valido o corrotto.\nProvare con un altro file"));
+        }
 
-    for(int i=0;i<json.count();++i){
-        QJsonObject lib;
-        QJsonObject det;
-        lib=json[i].toObject();
-        addT(lib.value("Name").toString());
-        det=json[i].toObject();
-        tabs[tabs.GetSize()-1]->Populate(det);
+        clear();
+        tabs.Clear();
+
+        for(int i=0;i<json.count();++i){
+            QJsonObject lib;
+            lib=json[i].toObject();
+            addT(lib.value("Name").toString());
+            tabs[tabs.GetSize()-1]->Populate(lib);
+        }
+    } catch (std::exception& e) {
+        QMessageBox::information(this, "Errore caricamento",e.what());
     }
+
 }
 void TabWindow::writeToFile(QString fileName)
 {

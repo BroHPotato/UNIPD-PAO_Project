@@ -12,10 +12,10 @@ class Container
 private:
     class nodo{
     public:
-        nodo() : element(new T), next(nullptr), prev(nullptr){}//done
-        nodo(const T& tmp, nodo* nxt=nullptr, nodo* prv=nullptr) : element(tmp), next(nxt), prev(prv) {}//done
-        nodo(const nodo& tmp) : element(tmp.element), next(tmp.next), prev(tmp.prev){}//done
-        ~nodo(){//deve eliminare in profonditá, done
+        nodo() : element(new T), next(nullptr), prev(nullptr){}
+        nodo(const T& tmp, nodo* nxt=nullptr, nodo* prv=nullptr) : element(tmp), next(nxt), prev(prv) {}
+        nodo(const nodo& tmp) : element(tmp.element), next(tmp.next), prev(tmp.prev){}
+        ~nodo(){
             if(next!=nullptr)
                 delete next;
         }
@@ -28,23 +28,24 @@ private:
     int size;
 
 public:
-    Container() : first(nullptr), last(nullptr), size(0){}//done
-    Container(const Container<T>&);//done
+    Container() : first(nullptr), last(nullptr), size(0){}
+    Container(const Container<T>&);
     ~Container()=default;
-    void PushFront(const T&);//done
-    void PushBack(const T&);//done
-    void Insert(int i,const T&);//done
-    void Remove(nodo*);//done
-    void Remove(const int&);//done
-    bool IsIn(const T&) const;//done
-    int GetSize() const{return size;}//done
-    nodo* GetNodoIndex(const int&) const;//done
-    nodo* GetNodo(const T) const;//done
-    int GetPos(nodo*) const;//done
-    int GetPos(const T&) const;//done
-    Container<T> operator=(const Container<T>&);//done
-    Container<T> operator+(const Container<T>&);//done
-    T& operator[](const int&) const;//done
+    void PushFront(const T&);
+    void PushBack(const T&);
+    void Insert(int i,const T&);
+    void Remove(nodo*);
+    void Remove(const int&);
+    bool IsIn(const T&) const;
+    int GetSize() const{return size;}
+    nodo* GetNodoIndex(const int&) const;
+    nodo* GetNodo(const T) const;
+    int GetPos(nodo*) const;
+    int GetPos(const T&) const;
+    Container<T> operator=(const Container<T>&);
+    Container<T> operator+(const Container<T>&);
+    T& operator[](const int&) const;
+    void Clear();
 };
 
 template<class T>
@@ -209,7 +210,7 @@ Container<T> Container<T>::operator=(const Container<T>& cont){
     return *this;
 }
 
-template<class T>//concatena alla prima la seconda
+template<class T>
 Container<T> Container<T>::operator+(const Container<T>& cont){
     nodo* last=GetNodoIndex(size-1);
     size+=cont.size;
@@ -229,5 +230,11 @@ T& Container<T>::operator[](const int& i) const{
     return tmp->element;
 }
 
+template<class T>
+void Container<T>::Clear(){
+    for (int i=0;i<size;++i) {
+        Remove(i);
+    }
+}
 
 #endif // CONTAINER_H

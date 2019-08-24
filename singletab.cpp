@@ -16,7 +16,7 @@ SingleTab::SingleTab(QString t, QWidget *parent) : QWidget(parent)
     view->setSelectionBehavior(QAbstractItemView::SelectRows);
     view->verticalHeader()->hide();
     view->setEditTriggers(QAbstractItemView::NoEditTriggers);
-    view->setSelectionMode(QAbstractItemView::SingleSelection);
+    view->setSelectionMode(QAbstractItemView::MultiSelection);
     view->setContentsMargins(0,0,0,0);
 
     resLabel=new QLabel("Ricerca per");
@@ -34,6 +34,9 @@ SingleTab::SingleTab(QString t, QWidget *parent) : QWidget(parent)
 
     addData=new QPushButton("Aggiungi file");
     connect(addData,SIGNAL(clicked()),this, SLOT(addEntry()));
+
+    viewData=new QPushButton("Visualizza file");
+    connect(viewData,SIGNAL(clicked()),this, SLOT(viewEntry()));
 
     editData=new QPushButton("Modifica file");
     connect(editData,SIGNAL(clicked()),this, SLOT(editEntry()));
@@ -55,6 +58,7 @@ SingleTab::SingleTab(QString t, QWidget *parent) : QWidget(parent)
     blayout->addWidget(searchBar);
     blayout->addSpacing(20);
     blayout->addWidget(addData);
+    blayout->addWidget(viewData);
     blayout->addWidget(editData);
     blayout->addWidget(removeData);
     blayout->addWidget(editLib);
@@ -71,6 +75,58 @@ SingleTab::SingleTab(QString t, QWidget *parent) : QWidget(parent)
     removeData->setDisabled(true);
 
     setLayout(layout);
+}
+
+void SingleTab::viewEntry(){
+    QTableView *temp = view;
+    QSortFilterProxyModel *proxy = static_cast<QSortFilterProxyModel*>(temp->model());
+    QItemSelectionModel *selectionModel = temp->selectionModel();
+
+    QModelIndexList indexes = selectionModel->selectedRows();
+    QModelIndex index, i;
+    QString t;
+    QString d;
+    QString f;
+    double s = 0.0;
+    int row = -1;
+    if(indexes.size()==0){
+        QMessageBox::information(this, "Attenzione", "Selezionare una riga prima di procedere");
+    }else{
+        foreach (index, indexes) {
+
+            row = proxy->mapToSource(index).row();
+            i = model->index(row, 0, QModelIndex());
+            QVariant varTitle = model->data(i, Qt::DisplayRole);
+            t = varTitle.toString();
+
+            i = model->index(row, 1, QModelIndex());
+            QVariant varDesc = model->data(i, Qt::DisplayRole);
+            d = varDesc.toString();
+
+            i = model->index(row, 2, QModelIndex());
+            QVariant varSize = model->data(i, Qt::DisplayRole);
+            s = varSize.toDouble();
+
+            i = model->index(row, 3, QModelIndex());
+            QVariant varFormat= model->data(i, Qt::DisplayRole);
+            f= varFormat.toString();
+        }
+
+        AddDialog aDialog("Visualizza file");
+
+        aDialog.typeItem->setCurrentText(model->dataType(i,Qt::DisplayRole).toString());
+        aDialog.typeItem->setDisabled(true);
+        aDialog.nameItem->setText(t);
+        aDialog.nameItem->setDisabled(true);
+        aDialog.descItem->setText(d);
+        aDialog.descItem->setDisabled(true);
+        aDialog.formatItem->setText(f);
+        aDialog.formatItem->setDisabled(true);
+        aDialog.sizeItem->setText(QString::number(s));
+        aDialog.sizeItem->setDisabled(true);
+
+        aDialog.exec();
+    }
 }
 
 void SingleTab::addEntry()
@@ -98,7 +154,7 @@ void SingleTab::addEntry()
             QModelIndex index = model->index(0, 0, QModelIndex());
             model->setDataItem(index, QVariant::fromValue(p), Qt::EditRole);
 
-        } catch (std::logic_error e) {
+        } catch (std::exception& e) {
             QMessageBox::information(this, "Errore ",e.what());
         }
     }
@@ -118,7 +174,7 @@ void SingleTab::editEntry()
     QString t;
     QString d;
     QString f;
-    double s;
+    double s = 0.0;
     int row = -1;
     if(indexes.size()==0){
         QMessageBox::information(this, "Attenzione", "Selezionare una riga prima di procedere");
@@ -166,7 +222,7 @@ void SingleTab::editEntry()
                     i = model->index(row, 1, QModelIndex());
                     model->setData(i, desc, Qt::EditRole);
                 }
-                if (size != s) {
+                if (std::abs(size-s)<std::numeric_limits<double>::epsilon() || std::abs(size-s)>std::numeric_limits<double>::epsilon()) {
                     i = model->index(row, 2, QModelIndex());
                     model->setData(i, s, Qt::EditRole);
                 }
@@ -175,12 +231,12 @@ void SingleTab::editEntry()
                     model->setData(i, format, Qt::EditRole);
                 }
             }
-        } catch (std::logic_error e) {
+        } catch (std::exception& e) {
             QMessageBox::information(this, "Errore ",e.what());
         }
     }
-
 }
+
 void SingleTab::removeEntry()
 {
     QTableView *temp = view;
@@ -274,8 +330,8 @@ void SingleTab::Populate(const QJsonObject& json){
             QModelIndex index = model->index(0, 0, QModelIndex());
             model->setDataItem(index, QVariant::fromValue(p), Qt::EditRole);
 
-        } catch (std::logic_error e) {
-            QMessageBox::information(this, "Errore ",e.what());
+        } catch (std::exception& e) {
+            QMessageBox::information(this, "Errore",e.what());
         }
     }
     if(model->rowCount()!=0){
@@ -303,7 +359,7 @@ QJsonObject SingleTab::SaveLib() const{
         jobj["Type"]=model->data(index,Qt::DisplayRole).toString();
         jarray.prepend(jobj);
     }
-    json["Entry"]=jarray;
+    json["Entrys"]=jarray;
     json["Name"]=title;
     return json;
 }
