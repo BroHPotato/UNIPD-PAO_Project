@@ -12,7 +12,7 @@ public:
     virtual QString GetType() const;
     virtual int GetSizeData();
 private:
-    const QString typefile="File generico";
+    const QString typefile="File Generico";
 };
 
 
