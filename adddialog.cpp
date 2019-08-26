@@ -23,7 +23,7 @@ AddDialog::AddDialog(QString t, QWidget* parent): QDialog(parent)
 
     sizeItem=new QLineEdit;
     sizeItem->setPlaceholderText("in KB");
-    sizeItem->setValidator(new QDoubleValidator(0,INFINITY,1000));
+    sizeItem->setValidator(new QDoubleValidator(0,Q_INFINITY,1000));
 
     formatItem=new QLineEdit;
     formatItem->setPlaceholderText("es. mp4 o png");
